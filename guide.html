@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>市场监测新规范客户经理工作指引</title>
+  <style>
+    :root {
+      --navy: #163a63;
+      --blue: #2f5f95;
+      --sky: #dfeaf6;
+      --line: #cfd9e6;
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #1f2d3d;
+      --muted: #5f6f82;
+      --warn: #fff4cc;
+      --warn-line: #ebc44b;
+      --danger: #fde6e6;
+      --danger-line: #d96262;
+      --success: #e7f4ea;
+      --shadow: 0 10px 28px rgba(22, 58, 99, 0.08);
+      --radius: 18px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+      line-height: 1.7;
+      background:
+        radial-gradient(circle at top right, rgba(47, 95, 149, 0.12), transparent 24%),
+        linear-gradient(180deg, #eef4fb 0%, #f7f9fc 16%, var(--bg) 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+      padding: 28px 0 72px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 34px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, #0f3157 0%, #204c80 60%, #36679d 100%);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -90px auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-size: clamp(30px, 4vw, 44px);
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      margin: 0 0 4px;
+      font-size: clamp(16px, 2vw, 22px);
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-owner {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .intro,
+    .meta {
+      position: relative;
+      z-index: 1;
+    }
+
+    .intro {
+      max-width: 820px;
+      margin: 0;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .meta-item {
+      padding: 16px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(2px);
+    }
+
+    .meta-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .toc {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin: 18px 0 24px;
+      padding: 14px;
+      border: 1px solid rgba(22, 58, 99, 0.08);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 8px 20px rgba(22, 58, 99, 0.06);
+      backdrop-filter: blur(10px);
+    }
+
+    .toc-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .toc a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: #eff4fa;
+      color: var(--navy);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .section {
+      margin-top: 26px;
+      padding: 28px;
+      border: 1px solid rgba(22, 58, 99, 0.08);
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      color: var(--navy);
+      font-size: clamp(22px, 3vw, 30px);
+      line-height: 1.3;
+    }
+
+    .section-desc {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card,
+    .mini-card,
+    .talk-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    }
+
+    .card h3,
+    .mini-card h3,
+    .talk-card h3 {
+      margin: 0 0 10px;
+      color: var(--navy);
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .card p,
+    .mini-card p,
+    .talk-card p {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .focus-card {
+      min-height: 100%;
+      padding: 22px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #17395f 0%, #234d7d 100%);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .focus-card span {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .focus-card strong {
+      font-size: 22px;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .callout,
+    .warning-box,
+    .danger-box {
+      padding: 20px 22px;
+      border-left: 6px solid var(--warn-line);
+      border-radius: 18px;
+      background: var(--warn);
+    }
+
+    .danger-box {
+      border-left-color: var(--danger-line);
+      background: var(--danger);
+    }
+
+    .warning-box strong,
+    .danger-box strong,
+    .callout strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #6a4e05;
+      font-size: 18px;
+    }
+
+    .danger-box strong {
+      color: #8b1f1f;
+    }
+
+    .list,
+    .plain-list,
+    .danger-list {
+      margin: 0;
+      padding-left: 1.35em;
+    }
+
+    .list li,
+    .plain-list li,
+    .danger-list li {
+      margin: 8px 0;
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      margin-bottom: 12px;
+      border-radius: 999px;
+      background: #eaf1f9;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+    }
+
+    .do-dont {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .do-box,
+    .dont-box {
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #f8fbff;
+    }
+
+    .dont-box {
+      background: #fff7f7;
+      border-color: #f2cccc;
+    }
+
+    .do-box h3,
+    .dont-box h3 {
+      margin: 0 0 10px;
+      color: var(--navy);
+      font-size: 18px;
+    }
+
+    .flow-wrap {
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 16px;
+      min-width: 760px;
+    }
+
+    .flow-node {
+      position: relative;
+      min-height: 120px;
+      padding: 18px 16px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fff 0%, #f8fbff 100%);
+      box-shadow: 0 8px 18px rgba(22, 58, 99, 0.05);
+    }
+
+    .flow-node::after {
+      content: "→";
+      position: absolute;
+      top: 50%;
+      right: -14px;
+      transform: translateY(-50%);
+      color: var(--blue);
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .flow-node:nth-child(4n)::after,
+    .flow-node:last-child::after,
+    .flow-node.branch-end::after {
+      display: none;
+    }
+
+    .flow-node.branch {
+      border-style: dashed;
+      background: #fefcf3;
+    }
+
+    .flow-node.good {
+      background: #f3fbf5;
+      border-color: #cbe7d1;
+    }
+
+    .flow-node.bad {
+      background: #fff6f6;
+      border-color: #efcaca;
+    }
+
+    .flow-node strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--navy);
+      font-size: 16px;
+    }
+
+    .flow-node p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    th,
+    td {
+      padding: 16px 14px;
+      border-bottom: 1px solid #e5edf6;
+      text-align: left;
+      vertical-align: top;
+      font-size: 15px;
+    }
+
+    th {
+      background: #edf3fb;
+      color: var(--navy);
+      font-size: 15px;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .talk-card {
+      border-left: 5px solid #8fb3da;
+    }
+
+    .talk-scene {
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .quote {
+      margin: 0;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: #f6f9fd;
+      color: var(--text);
+    }
+
+    .ending {
+      padding: 24px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+      border: 1px solid var(--line);
+    }
+
+    .ending p {
+      margin: 8px 0;
+    }
+
+    .back-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border: none;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(22, 58, 99, 0.22);
+    }
+
+    .back-top.show {
+      display: inline-flex;
+    }
+
+    @media (max-width: 960px) {
+      .grid-4,
+      .grid-3,
+      .grid-2,
+      .split,
+      .do-dont {
+        grid-template-columns: 1fr;
+      }
+
+      .flow {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+        min-width: 0;
+      }
+
+      .flow-node:nth-child(4n)::after {
+        display: block;
+      }
+
+      .flow-node:nth-child(2n)::after,
+      .flow-node:last-child::after,
+      .flow-node.branch-end::after {
+        display: none;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(calc(100% - 20px), var(--max));
+        padding-top: 16px;
+      }
+
+      .hero,
+      .section {
+        padding: 22px 18px;
+      }
+
+      .toc {
+        padding: 12px;
+      }
+
+      .toc-list {
+        gap: 8px;
+      }
+
+      .toc a {
+        min-height: 34px;
+        padding: 0 12px;
+        font-size: 13px;
+      }
+
+      .focus-card strong {
+        font-size: 20px;
+      }
+
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .card li,
+      .do-box li,
+      .dont-box li,
+      .flow-node p,
+      td {
+        line-height: 1.8;
+      }
+
+      td,
+      th {
+        padding-top: 18px;
+        padding-bottom: 18px;
+      }
+
+      .flow-node::after {
+        content: "↓";
+        top: auto;
+        right: 50%;
+        bottom: -18px;
+        transform: translateX(50%);
+      }
+
+      .flow-node:nth-child(2n)::after {
+        display: block;
+      }
+
+      .flow-node:last-child::after,
+      .flow-node.branch-end::after {
+        display: none;
+      }
+
+      table {
+        min-width: 640px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .page {
+        width: 100%;
+        padding: 0;
+      }
+
+      .toc,
+      .back-top {
+        display: none !important;
+      }
+
+      .section,
+      .hero {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+  <div class="page">
+    <header class="hero">
+      <div class="hero-tag">厦门市场监测内部培训工作指引</div>
+      <h1>市场监测新规范客户经理工作指引</h1>
+      <p class="subtitle">聚焦样本户管理、数据质量校验、激励对象</p>
+      <p class="hero-owner">厦门市场监测工作内部学习材料 · V1.0</p>
+      <p class="intro">本指引面向客户经理，帮助大家把制度要求转化为日常拜访、样本户维护、数据质量校验和客户沟通中的具体动作。</p>
+      <div class="meta">
+        <div class="meta-item">
+          <strong>使用对象</strong>
+          一线客户经理、市场部人员、分公司市场监测相关人员。
+        </div>
+        <div class="meta-item">
+          <strong>材料定位</strong>
+          用于日常查看、培训宣贯、客户拜访前快速查阅，不替代正式制度全文。
+        </div>
+        <div class="meta-item">
+          <strong>重点依据</strong>
+          新规范第二章、第四章第二十二条、第五章第二十三条。
+        </div>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="目录导航">
+      <div class="toc-list">
+        <a href="#focus">四句话</a>
+        <a href="#module1">为什么关注</a>
+        <a href="#module2">样本户管理</a>
+        <a href="#module3">闭环流程</a>
+        <a href="#module4">数据质量校验</a>
+        <a href="#module5">激励对象</a>
+        <a href="#module6">客户沟通话术</a>
+        <a href="#module7">不能说的话</a>
+        <a href="#module8">操作清单</a>
+        <a href="#module9">最后提醒</a>
+      </div>
+    </nav>
+
+    <section class="section" id="focus">
+      <h2 class="section-title">客户经理必须记住的四句话</h2>
+      <p class="section-desc">先把这四句话记牢，日常拜访、客户沟通、异常处理都围绕这四个判断展开。</p>
+      <div class="grid-4">
+        <div class="focus-card">
+          <span>第一句</span>
+          <strong>样本户，重在质量，不是凑数量。</strong>
+        </div>
+        <div class="focus-card">
+          <span>第二句</span>
+          <strong>数据质量，重在真实，不是做漂亮。</strong>
+        </div>
+        <div class="focus-card">
+          <span>第三句</span>
+          <strong>日常校验，融入拜访，不是额外负担。</strong>
+        </div>
+        <div class="focus-card">
+          <span>第四句</span>
+          <strong>激励政策，合格才有，不是固定承诺。</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="module1">
+      <h2 class="section-title">模块一：为什么客户经理要重点关注这三块</h2>
+      <p class="section-desc">这次新规范中，客户经理最需要掌握的三件事：样本户怎么来，数据质量怎么保，激励政策怎么讲。</p>
+      <div class="grid-3">
+        <article class="card">
+          <div class="label">样本户怎么来</div>
+          <h3>不是随便找客户，而是从数采终端里“选取”出来</h3>
+          <p>样本户不是为了补数量临时找客户，而是从数据质量较高、代表性较强的数采终端中识别并选取。客户经理要看的是真实经营状态、扫码习惯和代表性，不是单纯看关系是否熟、配合是否快。</p>
+        </article>
+        <article class="card">
+          <div class="label">数据质量怎么保</div>
+          <h3>不是后台一个部门的事，拜访动作里就有责任</h3>
+          <p>库存、价格、扫码真实性，客户经理在拜访、盘库、价格核实、异常整改中都要顺手看、及时问、发现后及时反馈。数据质量不是后端“补出来”的，而是前端真实经营一项项核出来的。</p>
+        </article>
+        <article class="card">
+          <div class="label">激励政策怎么讲</div>
+          <h3>不是成了样本户就固定享受，而是合格才纳入</h3>
+          <p>客户经理对外口径一定要稳。激励对象是纳入行业卷烟市场监测体系且数据质量合格的样本户。能不能激励，要先看数据质量评价，不能提前承诺，更不能用激励去诱导客户做不真实数据。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="module2">
+      <h2 class="section-title">模块二：样本户管理，客户经理要掌握的重点</h2>
+      <p class="section-desc">样本户管理的关键不是“找一个愿意配合的客户”，而是“选一个真实、稳定、代表性强、数据质量能持续过关的客户”。</p>
+      <div class="split">
+        <div class="card">
+          <div class="label">样本户从哪里来</div>
+          <h3>采用“选取”的方式发展</h3>
+          <p>样本户采用“选取”的方式发展，即从数采终端中识别并选取数据质量较高客户作为样本户。</p>
+        </div>
+        <div class="card">
+          <div class="label">客户经理主判断</div>
+          <h3>先看真实经营，再看配合基础</h3>
+          <p>客户经理要把客户真实经营情况、配合意愿、扫码习惯、异常情况一起看，既不能为了数量硬推，也不能把“扫码次数看起来多”当成“数据质量好”。</p>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 18px;">
+        <article class="card">
+          <div class="label">后备样本户特征</div>
+          <h3>什么样的客户更适合作为后备样本户</h3>
+          <ul class="list">
+            <li>经营时间相对稳定（入网经营达到12个月）。</li>
+            <li>使用店铺管理系统并持续上传数据达到140天。</li>
+            <li>信用等级达标（A级以上）。</li>
+            <li>扫码销售习惯稳定（连续2个月扫码销售天数〔当日零售总量＞0〕≥27天，1—2月≥20天）。</li>
+            <li>零售市场代表性较强；行业直营店、主营业务非快消品零售的客户，以及总部强管控、经营策略无法随行就市或存在内部调拨业务的连锁客户，不宜作为样本户。</li>
+            <li>客户前140天销购比处于标准区间。</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="label">客户经理主要动作</div>
+          <h3>样本户选取中要做什么</h3>
+          <ul class="list">
+            <li>配合了解客户意愿和实际经营情况。</li>
+            <li>向客户讲清样本户责任、数据质量要求和激励前提。</li>
+            <li>引导客户开展库存初始化校准及价格调整。</li>
+            <li>开展不少于两次库存盘库，每次抽盘不少于10个卷烟规格，两次间隔不少于14天。</li>
+            <li>连续两次库存准确率达到95%以上、库存准确面达到90%以上后，方可确定为样本户。</li>
+            <li>及时反馈客户配合度、扫码习惯和异常情况。</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="do-dont">
+        <article class="do-box">
+          <h3>三要</h3>
+          <ul class="plain-list">
+            <li>要关注客户真实经营状态。</li>
+            <li>要引导客户做好库存校准、价格调整。</li>
+            <li>要及时反馈客户配合度、扫码习惯和异常情况。</li>
+          </ul>
+        </article>
+        <article class="dont-box">
+          <h3>三不要</h3>
+          <ul class="plain-list">
+            <li>不要为了完成数量硬推客户。</li>
+            <li>不要选择代表性不足、经营特殊的客户。</li>
+            <li>不要把“扫码好看”当成“数据质量好”。</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="module3">
+      <h2 class="section-title">模块三：样本户选取闭环流程</h2>
+      <p class="section-desc">样本户不是一次性动作，而是从识别、校准、盘库、纳入、维护到月度评价的闭环过程。客户经理要知道自己处在闭环的哪一环。</p>
+      <div class="flow-wrap">
+        <div class="flow" role="img" aria-label="样本户选取闭环流程图">
+          <div class="flow-node">
+            <strong>数采终端基础</strong>
+            <p>先从已有数采终端中看数据上传、经营稳定性和基础条件。</p>
+          </div>
+          <div class="flow-node">
+            <strong>识别后备样本户</strong>
+            <p>从数据质量较高、代表性较强的客户中识别后备对象。</p>
+          </div>
+          <div class="flow-node">
+            <strong>确认客户意愿与代表性</strong>
+            <p>了解客户是否愿意配合，并核实实际经营情况和市场代表性。</p>
+          </div>
+          <div class="flow-node">
+            <strong>客户初始化校准</strong>
+            <p>引导客户开展库存初始化校准及价格调整，把底账先做准。</p>
+          </div>
+          <div class="flow-node">
+            <strong>两次库存盘库校验</strong>
+            <p>按规范要求落实盘库校验，核实系统库存和实物库存。</p>
+          </div>
+          <div class="flow-node">
+            <strong>达到标准后纳入样本户</strong>
+            <p>符合要求后，正式纳入样本户管理范围。</p>
+          </div>
+          <div class="flow-node">
+            <strong>系统维护与数据衔接</strong>
+            <p>由相关管理人员按要求完成系统维护和数据补传，客户经理配合做好客户解释和跟进。</p>
+          </div>
+          <div class="flow-node">
+            <strong>日常数据质量校验</strong>
+            <p>把库存、价格、扫码真实性的校验融入日常拜访。</p>
+          </div>
+          <div class="flow-node">
+            <strong>异常预警与整改</strong>
+            <p>发现异常先核实、再提醒整改，必要时及时反馈。</p>
+          </div>
+          <div class="flow-node">
+            <strong>月度数据质量评价</strong>
+            <p>按月评价数据质量，结果直接关系激励资格和后续管理。</p>
+          </div>
+          <div class="flow-node good branch">
+            <strong>合格：纳入激励范围</strong>
+            <p>只有当月数据质量合格的样本户，才纳入激励范围。</p>
+          </div>
+          <div class="flow-node bad branch branch-end">
+            <strong>不合格：取消当月激励</strong>
+            <p>必要时整改或退出，不掩盖问题，不拖延处理。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="module4">
+      <h2 class="section-title">模块四：数据质量校验，拜访时重点看什么</h2>
+      <p class="section-desc">新规范建立客户、客户经理、地市公司、省公司、销售公司“五级”数据质量校验机制。客户经理是其中非常关键的一环，关键动作可以浓缩成“拜访三看”。</p>
+      <div class="grid-3">
+        <article class="mini-card">
+          <div class="label">拜访三看之一</div>
+          <h3>看库存</h3>
+          <ul class="list">
+            <li>系统库存和实物库存是否明显不一致。</li>
+            <li>是否需要提醒客户盘点校准。</li>
+          </ul>
+        </article>
+        <article class="mini-card">
+          <div class="label">拜访三看之二</div>
+          <h3>看价格</h3>
+          <ul class="list">
+            <li>系统记录价格和实际零售价格是否一致。</li>
+            <li>是否存在价格记录不真实、不及时的情况。</li>
+          </ul>
+        </article>
+        <article class="mini-card">
+          <div class="label">拜访三看之三</div>
+          <h3>看扫码真实性</h3>
+          <ul class="list">
+            <li>是否存在漏扫、乱扫、集中补扫。</li>
+            <li>是否真实反映日常销售。</li>
+          </ul>
+        </article>
+      </div>
+      <div class="warning-box" style="margin-top: 18px;">
+        <strong>发现异常怎么办</strong>
+        <ul class="plain-list">
+          <li>先核实情况。</li>
+          <li>再提醒客户整改。</li>
+          <li>必要时反馈市场部或地市信息管理员。</li>
+          <li>不替客户掩盖问题。</li>
+          <li>不帮助客户美化数据。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="module5">
+      <h2 class="section-title">模块五：激励对象，客户经理必须讲准</h2>
+      <p class="section-desc">激励口径说得准不准，直接影响客户理解。对外表达要把“范围、前提、边界”讲清楚，不能图省事说成“成了样本户就有奖励”。</p>
+      <div class="danger-box">
+        <strong>激励解释的五条边界</strong>
+        <ul class="danger-list">
+          <li>不是所有客户都有激励。</li>
+          <li>不是成为样本户就一定有激励。</li>
+          <li>激励对象是纳入行业卷烟市场监测体系且数据质量合格的样本户。</li>
+          <li>数据质量不合格样本户，应取消当月激励。</li>
+          <li>具体激励方式和标准，按本单位政策执行。</li>
+        </ul>
+      </div>
+      <div class="callout" style="margin-top: 18px;">
+        <strong>客户经理特别注意</strong>
+        对客户解释激励时，不能承诺固定奖励，不能暗示客户通过“做漂亮数据”获得激励。宣传口径始终围绕“真实扫码、数据准确”。
+      </div>
+    </section>
+
+    <section class="section" id="module6">
+      <h2 class="section-title">模块六：客户沟通话术</h2>
+      <p class="section-desc">下面的话术重点不是“说得好听”，而是帮助客户理解真实要求、配合边界和数据质量重点，适合培训宣贯和拜访前快速查看。</p>
+      <div class="grid-2">
+        <article class="talk-card">
+          <div class="talk-scene">场景1：向客户介绍为什么要做样本户</div>
+          <p class="quote">您这边经营比较稳定，也一直使用店铺管理系统上传数据。现在市场监测工作更重视真实经营数据，希望选取一批数据质量较好、代表性较强的客户作为样本户。样本户不是要求您多卖、多扫，而是希望您真实销售、真实扫码、库存准确。</p>
+        </article>
+        <article class="talk-card">
+          <div class="talk-scene">场景2：向客户说明扫码要求</div>
+          <p class="quote">这个工作不是要求您每天必须扫多少笔，也不是要求您在固定时间扫码。重点是实际卖了烟，就按照真实销售情况及时扫码，价格也按实际销售情况记录，保证数据真实准确。</p>
+        </article>
+        <article class="talk-card">
+          <div class="talk-scene">场景3：向客户说明库存盘点</div>
+          <p class="quote">样本户数据质量里面，库存准确很重要。我们会协助您把系统库存和实物库存核对清楚。如果发现账实不符，要通过系统规定的方式进行校准，这样后续数据才更准确，也能帮助您自己掌握库存情况。</p>
+        </article>
+        <article class="talk-card">
+          <div class="talk-scene">场景4：向客户说明激励</div>
+          <p class="quote">样本户激励不是固定发放，也不是成为样本户就一定有。系统会按月评价数据质量，数据质量合格的样本户才符合激励条件。具体激励方式和标准，按公司统一政策执行。</p>
+        </article>
+        <article class="talk-card">
+          <div class="talk-scene">场景5：客户担心麻烦</div>
+          <p class="quote">这个工作不会要求您额外做不真实的事情，主要是把日常销售、库存、价格如实记录好。数据准确后，对公司了解市场有帮助，对您自己掌握经营情况也有帮助。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="module7">
+      <h2 class="section-title">模块七：这些话不要说</h2>
+      <p class="section-desc">下面这些说法容易把制度边界讲偏，也容易让客户误解成“只要为了指标去做数据就行”。培训和拜访中都要避免。</p>
+      <div class="danger-box">
+        <strong>这些话不要说</strong>
+        <ul class="danger-list">
+          <li>每天必须扫多少笔。</li>
+          <li>每天必须扫多少量。</li>
+          <li>必须在某个固定时段扫码。</li>
+          <li>单笔扫码订单不能超过多少规格。</li>
+          <li>存销比必须控制在某个范围。</li>
+          <li>零售毛利率必须达到某个固定数值。</li>
+          <li>成为样本户就一定有奖励。</li>
+          <li>扫码越多奖励越多。</li>
+          <li>数据不好看就改一下。</li>
+          <li>我保证你每个月都有激励。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="module8">
+      <h2 class="section-title">模块八：客户经理操作清单</h2>
+      <p class="section-desc">这张表适合培训时讲解，也适合拜访前快速对照。</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>工作场景</th>
+              <th>客户经理要做什么</th>
+              <th>注意事项</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>发展样本户</td>
+              <td>配合了解客户经营情况、配合意愿、扫码习惯。</td>
+              <td>不能只看客户关系好不好。</td>
+            </tr>
+            <tr>
+              <td>客户沟通</td>
+              <td>讲清样本户责任、数据质量要求和激励前提。</td>
+              <td>不能只讲好处，不讲要求。</td>
+            </tr>
+            <tr>
+              <td>初始化校准</td>
+              <td>引导客户开展全规格库存盘点。</td>
+              <td>账实不符要按系统规则校准。</td>
+            </tr>
+            <tr>
+              <td>实地盘库</td>
+              <td>配合开展库存盘库。</td>
+              <td>按规范要求落实盘库频次、抽盘规格和间隔要求。</td>
+            </tr>
+            <tr>
+              <td>日常拜访</td>
+              <td>结合日常拜访查看库存、价格、扫码真实性。</td>
+              <td>让数据质量校验融入拜访，不额外增加无效负担。</td>
+            </tr>
+            <tr>
+              <td>异常整改</td>
+              <td>配合核实原因，提醒客户整改，必要时反馈。</td>
+              <td>不替客户掩盖问题，不帮助客户美化数据。</td>
+            </tr>
+            <tr>
+              <td>激励解释</td>
+              <td>说明数据质量合格是激励前提。</td>
+              <td>不承诺固定激励，不暗示做数据。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="module9">
+      <h2 class="section-title">模块九：最后提醒</h2>
+      <div class="ending">
+        <p>客户经理要记住：样本户管理的核心是质量；数据质量校验的核心是真实；客户沟通的核心是讲清边界；激励解释的核心是合格前提。</p>
+        <p>本指引用于内部培训和日常工作提示，正式执行以行业规范及本单位具体管理要求为准。</p>
+        <p>如本单位后续出台样本户激励、拜访校验、异常整改等具体实施细则，应以本单位最新要求为准，并及时更新本指引。</p>
+        <p>本指引结合厦门市场监测工作实践整理形成，用于厦门市场监测工作内部培训、日常提示和客户经理拜访前查阅。其他单位如需参考，应结合本地实际和正式制度口径另行审核。</p>
+      </div>
+    </section>
+  </div>
+
+  <button class="back-top" id="backTop" type="button" aria-label="返回顶部">顶部</button>
+
+  <script>
+    (function () {
+      var backTop = document.getElementById('backTop');
+
+      function toggleBackTop() {
+        if (window.scrollY > 360) {
+          backTop.classList.add('show');
+        } else {
+          backTop.classList.remove('show');
+        }
+      }
+
+      window.addEventListener('scroll', toggleBackTop, { passive: true });
+      backTop.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      toggleBackTop();
+    })();
+  </script>
+</body>
+</html>

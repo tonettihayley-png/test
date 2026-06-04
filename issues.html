@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>市场监测操作索引</title>
+<style>
+:root {
+    --primary: #1a5fac;
+    --primary-light: #2d7dd2;
+    --primary-dark: #0e3d7a;
+    --cat1: #e84444;
+    --cat2: #f07d1a;
+    --cat3: #8e44ad;
+    --cat4: #0f9e6c;
+    --cat5: #e67e22;
+    --cat6: #2980b9;
+    --bg: #f0f4f8;
+    --card: #ffffff;
+    --text: #1a2940;
+    --text2: #5a6b82;
+    --border: #dde6f0;
+    --highlight: #fff3a3;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(26,95,172,0.10);
+    --bottom-bar: 60px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: calc(var(--bottom-bar) + env(safe-area-inset-bottom)); }
+.top-bar { position: sticky; top: 0; z-index: 100; background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); padding: 12px 14px 0; box-shadow: 0 2px 16px rgba(0,0,0,0.18); }
+.top-title { display: flex; align-items: center; gap: 8px; color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+.top-title .icon { font-size: 19px; }
+.top-title .count-badge { margin-left: auto; background: rgba(255,255,255,0.22); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+.search-wrap { position: relative; margin-bottom: 10px; }
+.search-input { width: 100%; height: 40px; border: none; border-radius: 20px; padding: 0 36px 0 40px; font-size: 14px; background: rgba(255,255,255,0.15); color: #fff; outline: none; transition: background 0.2s; }
+.search-input::placeholder { color: rgba(255,255,255,0.6); }
+.search-input:focus { background: rgba(255,255,255,0.25); }
+.search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.7); font-size: 15px; pointer-events: none; }
+.search-clear { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.7); font-size: 16px; cursor: pointer; width: 22px; height: 22px; display: none; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255,255,255,0.15); }
+.cat-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.cat-scroll::-webkit-scrollbar { display: none; }
+.cat-chip { flex-shrink: 0; padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.85); border: 1.5px solid rgba(255,255,255,0.2); transition: all 0.2s; white-space: nowrap; }
+.cat-chip.active { background: #fff; color: var(--primary-dark); border-color: #fff; }
+.search-result-tip { text-align: center; padding: 10px 16px; font-size: 12px; color: var(--text2); display: none; }
+.content { padding: 12px 14px; max-width: 540px; margin: 0 auto; }
+.cat-section { margin-bottom: 18px; }
+.cat-header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--radius) var(--radius) 0 0; font-size: 14px; font-weight: 700; color: #fff; position: relative; overflow: hidden; cursor: pointer; user-select: none; }
+.cat-header::before { content: ''; position: absolute; right: -20px; top: -20px; width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.12); }
+.cat-header .cat-icon { font-size: 18px; }
+.cat-header .cat-count { margin-left: auto; background: rgba(255,255,255,0.25); font-size: 11px; padding: 2px 8px; border-radius: 12px; }
+.cat-header .cat-toggle { font-size: 13px; opacity: 0.8; transition: transform 0.25s; }
+.cat-header.collapsed .cat-toggle { transform: rotate(-90deg); }
+.cat-items { display: flex; flex-direction: column; gap: 8px; margin-top: 2px; }
+.cat-items.collapsed { display: none; }
+.item-card { background: var(--card); border-radius: 10px; box-shadow: var(--shadow); overflow: hidden; border-left: 4px solid transparent; animation: fadeUp 0.3s ease both; transition: box-shadow 0.2s; }
+.item-card:active { box-shadow: 0 1px 4px rgba(0,0,0,0.10); }
+.card-head { display: flex; align-items: flex-start; gap: 10px; padding: 13px 14px; cursor: pointer; user-select: none; }
+.card-num { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; margin-top: 1px; }
+.card-title-wrap { flex: 1; min-width: 0; }
+.card-indicator { font-size: 12px; color: var(--text2); margin-bottom: 3px; }
+.card-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.4; }
+.card-detail-label { display: inline-block; font-size: 11px; color: var(--text2); background: var(--bg); padding: 2px 7px; border-radius: 4px; margin-top: 4px; }
+.detail-labels { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
+.detail-label { display: inline-block; font-size: 11px; color: var(--text2); background: var(--bg); padding: 3px 7px; border-radius: 4px; width: fit-content; }
+.card-arrow { flex-shrink: 0; color: var(--text2); font-size: 14px; margin-top: 4px; transition: transform 0.25s; }
+.card-head.open .card-arrow { transform: rotate(90deg); }
+.card-body { overflow: hidden; max-height: 0; transition: max-height 0.35s ease; }
+.card-body.open { max-height: 2500px; }
+.card-body-inner { padding: 0 14px 14px; }
+.tab-nav { display: flex; gap: 0; border-bottom: 2px solid var(--bg); margin-bottom: 12px; }
+.tab-btn { flex: 1; padding: 8px 4px; font-size: 12px; font-weight: 600; color: var(--text2); background: none; border: none; cursor: pointer; border-bottom: 2.5px solid transparent; margin-bottom: -2px; transition: all 0.2s; text-align: center; }
+.tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+.content-text { font-size: 13.5px; line-height: 1.75; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+.content-text mark { background: var(--highlight); color: inherit; border-radius: 2px; padding: 0 1px; }
+.step-list { margin: 0; padding: 0; list-style: none; }
+.step-item { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed var(--border); }
+.step-item:last-child { border-bottom: none; }
+.step-dot { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; font-size: 11px; font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+.step-text { font-size: 13.5px; line-height: 1.7; color: var(--text); flex: 1; white-space: pre-wrap; word-break: break-word; }
+.empty-state { text-align: center; padding: 60px 20px; display: none; }
+.empty-state.show { display: block; }
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+.empty-text { color: var(--text2); font-size: 14px; }
+.bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: #fff; height: calc(var(--bottom-bar) + env(safe-area-inset-bottom)); box-shadow: 0 -1px 0 rgba(0,0,0,0.06), 0 -4px 20px rgba(0,0,0,0.08); display: flex; align-items: center; padding-bottom: env(safe-area-inset-bottom); }
+.tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; padding: 8px 1px; position: relative; transition: all 0.15s; }
+.tab-item:active { transform: scale(0.92); }
+.tab-item .t-icon { font-size: 18px; color: #aab; transition: all 0.2s; }
+.tab-item .t-label { font-size: 10px; color: #aab; transition: all 0.2s; font-weight: 500; }
+.tab-item.active .t-icon, .tab-item.active .t-label { color: var(--primary); }
+.tab-badge { position: absolute; top: 4px; right: calc(50% - 18px); background: #e84444; color: #fff; font-size: 9px; font-weight: 700; min-width: 16px; height: 16px; border-radius: 8px; padding: 0 4px; display: flex; align-items: center; justify-content: center; }
+.back-top { position: fixed; right: 16px; bottom: calc(var(--bottom-bar) + 12px + env(safe-area-inset-bottom)); width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(26,95,172,0.35); cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s; transform: translateY(10px); z-index: 150; }
+.back-top.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@media (min-width: 540px) { .content { padding: 16px 20px; } }
+
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-title">
+    <span class="icon">📋</span>
+    市场监测操作索引
+    <span class="count-badge" id="totalBadge">共11条指标</span>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" type="text" placeholder="搜索指标、问题、解决方法…" autocomplete="off">
+    <span class="search-clear" id="searchClear">✕</span>
+  </div>
+  <div class="cat-scroll" id="catChips">
+    <span class="cat-chip active" data-cat="全部">全部</span>
+    <span class="cat-chip" data-cat="异常库存">📦 异常库存</span>
+    <span class="cat-chip" data-cat="异常扫码行为">🔄 异常扫码</span>
+    <span class="cat-chip" data-cat="异常销购比">📊 销购比</span>
+    <span class="cat-chip" data-cat="扫码天数">📅 天数</span>
+    <span class="cat-chip" data-cat="损益量">⚖️ 损益量</span>
+    <span class="cat-chip" data-cat="其他">🔧 其他</span>
+  </div>
+</div>
+
+<div class="search-result-tip" id="searchTip"></div>
+
+<div class="content" id="mainContent">
+
+  <div class="cat-section" data-cat="异常库存">
+    <div class="cat-header" style="background:linear-gradient(135deg, #c0392b, #e84444)" onclick="toggleCat(this)">
+      <span class="cat-icon">📦</span>
+      异常库存
+      <span class="cat-count">2条</span>
+      <span class="cat-toggle">▾</span>
+    </div>
+    <div class="cat-items" id="cat-异常库存">
+      <div class="item-card" data-id="1" data-cat="异常库存">
+        <div class="card-head" onclick="toggleCard(1, this)">
+          <span class="card-num" style="background:#e84444">1</span>
+          <div class="card-title-wrap">
+            <div class="card-indicator">负库存</div>
+            <div class="detail-labels"><span class="detail-label">当日规格库存量&lt;0</span></div>
+          </div>
+          <span class="card-arrow">›</span>
+        </div>
+        <div class="card-body" id="body-1">
+          <div class="card-body-inner">
+            <div class="tab-nav">
+              <button class="tab-btn active" onmousedown="switchItemTab(1,0,this,event)">🔍 问题分析</button>
+              <button class="tab-btn" onmousedown="switchItemTab(1,1,this,event)">✅ 解决方法</button>
+              <button class="tab-btn" onmousedown="switchItemTab(1,2,this,event)">⚙️ 系统操作</button>
+            </div>
+            <div class="tab-pane active" id="tp-1-0"></div>
+            <div class="tab-pane" id="tp-1-1"></div>
+            <div class="tab-pane" id="tp-1-2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="item-card" data-id="2" data-cat="异常库存">
+        <div class="card-head" onclick="toggleCard(2, this)">
+          <span class="card-num" style="background:#e84444">2</span>
+          <div class="card-title-wrap">
+            <div class="card-indicator">库存较大</div>
+            <div class="detail-labels"><span class="detail-label">单规格库存量&gt;500条</span><span class="detail-label">当日总库存&gt;=7000条</span><span class="detail-label">库存&gt;全年（365天）批发销量*0.53</span><span class="detail-label">当日总库存量&gt;前140天批发销量*1.4</span></div>
+          </div>
+          <span class="card-arrow">›</span>
+        </div>
+        <div class="card-body" id="body-2">
+          <div class="card-body-inner">
+            <div class="tab-nav">
+              <button class="tab-btn active" onmousedown="switchItemTab(2,0,this,event)">🔍 问题分析</button>
+              <button class="tab-btn" onmousedown="switchItemTab(2,1,this,event)">✅ 解决方法</button>
+              <button class="tab-btn" onmousedown="switchItemTab(2,2,this,event)">⚙️ 系统操作</button>
+            </div>
+            <div class="tab-pane active" id="tp-2-0"></div>
+            <div class="tab-pane" id="tp-2-1"></div>
+            <div class="tab-pane" id="tp-2-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cat-section" data-cat="异常扫码行为">
+    <div class="cat-header" style="background:linear-gradient(135deg, #d35400, #f07d1a)" onclick="toggleCat(this)">
+      <span class="cat-icon">🔄</span>
+      异常扫码行为
+      <span class="cat-count">3条</span>
+      <span class="cat-toggle">▾</span>
+    </div>
+    <div class="cat-items" id="cat-异常扫码行为">
+      <div class="item-card" data-id="6" data-cat="异常扫码行为">
+        <div class="card-head" onclick="toggleCard(6, this)">
+          <span class="card-num" style="background:#f07d1a">6</span>
+          <div class="card-title-wrap">
+            <div class="card-indicator">当日销量较大</div>
+            <div class="detail-labels"><span class="detail-label">单规格日销量&gt;100条</span><span class="detail-label">当日总零售销量&gt;近140天批发销量*0.1</span></div>
+          </div>
+          <span class="card-arrow">›</span>
+        </div>
+        <div class="card-body" id="body-6">
+          <div class="card-body-inner">
+            <div class="tab-nav">
+              <button class="tab-btn active" onmousedown="switchItemTab(6,0,this,event)">🔍 问题分析</button>
+              <button class="tab-btn" onmousedown="switchItemTab(6,1,this,event)">✅ 解决方法</button>
+              <button class="tab-btn" onmousedown="switchItemTab(6,2,this,event)">⚙️ 系统操作</button>
+            </div>
+            <div class="tab-pane active" id="tp-6-0"></div>
+            <div class="tab-pane" id="tp-6-1"></div>
+            <div class="tab-pane" id="tp-6-2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="item-card" data-id="8" data-cat="异常扫码行为">
+        <div class="card-head" onclick="toggleCard(8, this)">
+          <span class="card-num" style="background:#f07d1a">8</span>
+          <div class="card-title-wrap">
+            <div class="card-indicator">负销售</div>
+            <div class="detail-labels"><span class="detail-label">当日总零售销量&lt;0</span><span class="detail-label">单日单规格零售销量&lt;0</span></div>
+          </div>
+          <span class="card-arrow">›</span>
+        </div>
+        <div class="card-body" id="body-8">
+          <div class="card-body-inner">
+            <div class="tab-nav">
+              <button class="tab-btn active" onmousedown="switchItemTab(8,0,this,event)">🔍 问题分析</button>
+              <button class="tab-btn" onmousedown="switchItemTab(8,1,this,event)">✅ 解决方法</button>
+              <button class="tab-btn" onmousedown="switchItemTab(8,2,this,event)">⚙️ 系统操作</button>
+            </div>
+            <div class="tab-pane active" id="tp-8-0"></div>
+            <div class="tab-pane" id="tp-8-1"></div>
+            <div class="tab-pane" id="tp-8-2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="item-card" data-id="10" data-cat="异常扫码行为">
+        <div class="card-head" onclick="toggleCard(10, this)">
+          <span class="card-num" style="background:#f07d1a">10</span>
+          <div class="card-title-wrap">
+            <div class="card-indicator">刷扫异常</div>
+            <div class="detail-labels"><span class="detail-label">集中扫码、笔数较少、日销售波动较大</span></div>
+          </div>
+          <span class="card-arrow">›</span>
+        </div>
+        <div class="card-body" id="body-10">
+          <div class="card-body-inner">
+            <div class="tab-nav">
+              <button class="tab-btn active" onmousedown="switchItemTab(10,0,this,event)">🔍 问题分析</button>
+              <button class="tab-btn" onmousedown="switchItemTab(10,1,this,event)">✅ 解决方法</button>
+              <button class="tab-btn" onmousedown="switchItemTab(10,2,this,event)">⚙️ 系统操作</button>
+            </div>
+            <div class="tab-pane active" id="tp-10-0"></div>
+            <div class="tab-pane" id="tp-10-1"></div>
+            <div class="tab-pane" id="tp-10-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cat-section" data-cat="异常销购比">
+    <div class="cat-header" style="background:linear-gradient(135deg, #7d3c98, #a855c8)" onclick="toggleCat(this)">
+      <span class="cat-icon">📊</span>
+      异常销购比
+      <span class="cat-count">1条</span>
+      <span class="cat-toggle">▾</span>
+    </div>
+    <div class="cat-items" id="cat-异常销购比">
+      <div class="item-card" data-id="11" data-cat="异常销购比">
+        <div class="card-head" onclick="toggleCard(11, this)">
+          <span class="card-num" style="background:#8e44ad">11</span>
+          <div class="card-title-wrap">
+            <div class="card-indicator">销购比不达标</div>
+            <div class="detail-labels"><span class="detail-label">销购比明显过高或过低（销购比前140天正常区间0.8-1.2）</span></div>
+          </div>
+          <span class="card-arrow">›</span>
+        </div>
+        <div class="card-body" id="body-11">
+          <div class="card-body-inner">
+            <div class="tab-nav">
+              <button class="tab-btn active" onmousedown="switchItemTab(11,0,this,event)">🔍 问题分析</button>
+              <button class="tab-btn" onmousedown="switchItemTab(11,1,this,event)">✅ 解决方法</button>
+              <button class="tab-btn" onmousedown="switchItemTab(11,2,this,event)">⚙️ 系统操作</button>
+            </div>
+            <div class="tab-pane active" id="tp-11-0"></div>
+            <div class="tab-pane" id="tp-11-1"></div>
+            <div class="tab-pane" id="tp-11-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cat-section" data-cat="扫码天数">
+    <div class="cat-header" style="background:linear-gradient(135deg, #0a7a54, #0f9e6c)" onclick="toggleCat(this)">
+      <span class="cat-icon">📅</span>
+      扫码天数
+      <span class="cat-count">1条</span>
+      <span class="cat-toggle">▾</span>
+    </div>
+    <div class="cat-items" id="cat-扫码天数">
+      <div class="item-card" data-id="12" data-cat="扫码天数">
+        <div class="card-head" onclick="toggleCard(12, this)">
+          <span class="card-num" style="background:#0f9e6c">12</span>
+          <div class="card-title-wrap">
+            <div class="card-indicator">扫码天数不达标</div>
+            <div class="detail-labels"><span class="detail-label">1.月度扫码天数不达标（1-2月扫码天数≥20天；其他月≥27天；）</span></div>
+          </div>
+          <span class="card-arrow">›</span>
+        </div>
+        <div class="card-body" id="body-12">
+          <div class="card-body-inner">
+            <div class="tab-nav">
+              <button class="tab-btn active" onmousedown="switchItemTab(12,0,this,event)">🔍 问题分析</button>
+              <button class="tab-btn" onmousedown="switchItemTab(12,1,this,event)">✅ 解决方法</button>
+              <button class="tab-btn" onmousedown="switchItemTab(12,2,this,event)">⚙️ 系统操作</button>
+            </div>
+            <div class="tab-pane active" id="tp-12-0"></div>
+            <div class="tab-pane" id="tp-12-1"></div>
+            <div class="tab-pane" id="tp-12-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cat-section" data-cat="损益量">
+    <div class="cat-header" style="background:linear-gradient(135deg, #b7760d, #e67e22)" onclick="toggleCat(this)">
+      <span class="cat-icon">⚖️</span>
+      损益量
+      <span class="cat-count">1条</span>
+      <span class="cat-toggle">▾</span>
+    </div>
+    <div class="cat-items" id="cat-损益量">
+      <div class="item-card" data-id="13" data-cat="损益量">
+        <div class="card-head" onclick="toggleCard(13, this)">
+          <span class="card-num" style="background:#e67e22">13</span>
+          <div class="card-title-wrap">
+            <div class="card-indicator">损益量较大</div>
+            <div class="detail-labels"><span class="detail-label">当日损益量&gt;库存量*0.02(损益量包括：报损量、手动入库量、出差单出库、修改库存（“库存改大”为益，“库存改小”为损））</span></div>
+          </div>
+          <span class="card-arrow">›</span>
+        </div>
+        <div class="card-body" id="body-13">
+          <div class="card-body-inner">
+            <div class="tab-nav">
+              <button class="tab-btn active" onmousedown="switchItemTab(13,0,this,event)">🔍 问题分析</button>
+              <button class="tab-btn" onmousedown="switchItemTab(13,1,this,event)">✅ 解决方法</button>
+              <button class="tab-btn" onmousedown="switchItemTab(13,2,this,event)">⚙️ 系统操作</button>
+            </div>
+            <div class="tab-pane active" id="tp-13-0"></div>
+            <div class="tab-pane" id="tp-13-1"></div>
+            <div class="tab-pane" id="tp-13-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cat-section" data-cat="其他">
+    <div class="cat-header" style="background:linear-gradient(135deg, #1b6ca8, #2980b9)" onclick="toggleCat(this)">
+      <span class="cat-icon">🔧</span>
+      其他
+      <span class="cat-count">3条</span>
+      <span class="cat-toggle">▾</span>
+    </div>
+    <div class="cat-items" id="cat-其他">
+      <div class="item-card" data-id="14" data-cat="其他">
+        <div class="card-head" onclick="toggleCard(14, this)">
+          <span class="card-num" style="background:#2980b9">14</span>
+          <div class="card-title-wrap">
+            <div class="card-indicator">修改库存</div>
+            <div class="detail-labels"><span class="detail-label">存在手工直接修改库存行为</span></div>
+          </div>
+          <span class="card-arrow">›</span>
+        </div>
+        <div class="card-body" id="body-14">
+          <div class="card-body-inner">
+            <div class="tab-nav">
+              <button class="tab-btn active" onmousedown="switchItemTab(14,0,this,event)">🔍 问题分析</button>
+              <button class="tab-btn" onmousedown="switchItemTab(14,1,this,event)">✅ 解决方法</button>
+              <button class="tab-btn" onmousedown="switchItemTab(14,2,this,event)">⚙️ 系统操作</button>
+            </div>
+            <div class="tab-pane active" id="tp-14-0"></div>
+            <div class="tab-pane" id="tp-14-1"></div>
+            <div class="tab-pane" id="tp-14-2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="item-card" data-id="15" data-cat="其他">
+        <div class="card-head" onclick="toggleCard(15, this)">
+          <span class="card-num" style="background:#2980b9">15</span>
+          <div class="card-title-wrap">
+            <div class="card-indicator">改价率</div>
+            <div class="detail-labels"><span class="detail-label">条销售改价率低于80%的样本户。（改价率=整条零售价与建议零售价不同的笔数/整条零售总笔数*100%。）</span></div>
+          </div>
+          <span class="card-arrow">›</span>
+        </div>
+        <div class="card-body" id="body-15">
+          <div class="card-body-inner">
+            <div class="tab-nav">
+              <button class="tab-btn active" onmousedown="switchItemTab(15,0,this,event)">🔍 问题分析</button>
+              <button class="tab-btn" onmousedown="switchItemTab(15,1,this,event)">✅ 解决方法</button>
+              <button class="tab-btn" onmousedown="switchItemTab(15,2,this,event)">⚙️ 系统操作</button>
+            </div>
+            <div class="tab-pane active" id="tp-15-0"></div>
+            <div class="tab-pane" id="tp-15-1"></div>
+            <div class="tab-pane" id="tp-15-2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="item-card" data-id="16" data-cat="其他">
+        <div class="card-head" onclick="toggleCard(16, this)">
+          <span class="card-num" style="background:#2980b9">16</span>
+          <div class="card-title-wrap">
+            <div class="card-indicator">价格剔除</div>
+            <div class="detail-labels"><span class="detail-label">建议零售价阈值，50%-300%</span></div>
+          </div>
+          <span class="card-arrow">›</span>
+        </div>
+        <div class="card-body" id="body-16">
+          <div class="card-body-inner">
+            <div class="tab-nav">
+              <button class="tab-btn active" onmousedown="switchItemTab(16,0,this,event)">🔍 问题分析</button>
+              <button class="tab-btn" onmousedown="switchItemTab(16,1,this,event)">✅ 解决方法</button>
+              <button class="tab-btn" onmousedown="switchItemTab(16,2,this,event)">⚙️ 系统操作</button>
+            </div>
+            <div class="tab-pane active" id="tp-16-0"></div>
+            <div class="tab-pane" id="tp-16-1"></div>
+            <div class="tab-pane" id="tp-16-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">🔍</div>
+    <div class="empty-text">没有找到相关内容<br>试试其他关键词</div>
+  </div>
+</div>
+
+
+<div class="bottom-bar">
+  <div class="tab-item active" data-tab="全部" onclick="switchTab('全部',event)">
+    <span class="t-icon">🏠</span><span class="t-label">全部</span>
+  </div>
+  <div class="tab-item" data-tab="异常库存" onclick="switchTab('异常库存',event)">
+    <span class="t-icon">📦</span><span class="t-label">库存</span>
+    <span class="tab-badge">2</span>
+  </div>
+  <div class="tab-item" data-tab="异常扫码行为" onclick="switchTab('异常扫码行为',event)">
+    <span class="t-icon">🔄</span><span class="t-label">扫码</span>
+    <span class="tab-badge">3</span>
+  </div>
+  <div class="tab-item" data-tab="异常销购比" onclick="switchTab('异常销购比',event)">
+    <span class="t-icon">📊</span><span class="t-label">销购比</span>
+    <span class="tab-badge">1</span>
+  </div>
+  <div class="tab-item" data-tab="扫码天数" onclick="switchTab('扫码天数',event)">
+    <span class="t-icon">📅</span><span class="t-label">天数</span>
+    <span class="tab-badge">1</span>
+  </div>
+  <div class="tab-item" data-tab="损益量" onclick="switchTab('损益量',event)">
+    <span class="t-icon">⚖️</span><span class="t-label">损益</span>
+    <span class="tab-badge">1</span>
+  </div>
+  <div class="tab-item" data-tab="其他" onclick="switchTab('其他',event)">
+    <span class="t-icon">🔧</span><span class="t-label">其他</span>
+    <span class="tab-badge">3</span>
+  </div>
+</div>
+<div class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+
+<script>
+const DATA = [{"id": 1, "cat": "异常库存", "indicator": "负库存", "detail_labels": ["当日规格库存量<0"], "analysis": "1、本质原因：系统库存<实际库存，销售时出现负库存。\n2、具体诱因：\n①客户扫码销售乱渠道卷烟。\n②客户未养成卷烟每卖必扫习惯，少扫/漏扫导致系统库存虚高。\n③系统异常造成流水未同步、异常单未处理，库存数据更新错误。", "solution": "1、核心引导：引导客户养成真实扫码、每日盘库的规范行为，从源头规避库存异常。\n2、规范动作：\n①严禁客户扫码销售乱渠道卷烟。\n②引导客户每日闭店前核对库存，出现偏差及时规范调整。\n③出现系统异常，及时联系客户经理报备，不得私自调整。", "operation": "1、负库存数量较小，核验该规格实际库存数量后，通过盘库或者退货对库存数量偏差进行调整。\n2、负库存数量较大，核验该规格实际库存数量后，向营销中心报备，按规范流程制定调整放那，严禁私自修改库存。（此类客户近期不宜作为样本户）"}, {"id": 2, "cat": "异常库存", "indicator": "库存较大", "detail_labels": ["单规格库存量>500条", "当日总库存>=7000条", "库存>全年（365天）批发销量*0.53", "当日总库存量>前140天批发销量*1.4"], "analysis": "1、本质原因：系统库存与实际动销严重不匹配，导致库存异常偏高。\n2、具体诱因：\n①客户未养成每卖必扫习惯，少扫/漏扫导致系统库存逐日累计虚高。\n②客户修改库存，虚增库存量。\n③客户实际动销能力不足，进货量远超销量。", "solution": "1、核心引导：引导客户养成真实扫码、每日盘库的规范行为，从源头规避库存异常；加强动销能力。\n2、规范动作：\n①引导客户每日闭店前核对库存，出现偏差及时规范调整，严禁直接修改库存。\n②指导客户开展促销下柜，降低库存。\n③动销较慢且短期内无法提升的客户，可认定为不具备代表性，建议进行样本户替换处理，待日后销售具备代表性时再申请进入。", "operation": "1、核验实际库存，针对不同情况采取不同方法。\n①系统库存略大于实际库存（偏差＜10条），可通过“销售”调整，要留意销购比的波动。\n②系统库存明显大于实际库存（偏差≥10条），可向营销中心报备完整销售计划，每日销量要科学、合理，避免引发其他通报。（如影响周期太长，且系统无限制，可先暂退样本户）\n\n2、补销售注意事项：\n建议分时段补销售，同一个订单不要超过3个规格，且3个规格的价差最好控制在5元/包以内。\n \n3、样本户替换流程：\n①样本户已注销或即将注销或其他紧急事项：第一时间向营销中心提交退出申请后，在国家局信息系统进行样本户退出。待新替换样本户数据确认上传国家局无误后再进行新增样本户处理。\n②样本户正常退出、替换：向营销中心提交替换申请后，次日与海晟融创确认新样本户数据已上传国家局无误后方可进行替换处理。"}, {"id": 6, "cat": "异常扫码行为", "indicator": "当日销量较大", "detail_labels": ["单规格日销量>100条", "当日总零售销量>近140天批发销量*0.1"], "analysis": "1、本质原因：单日销量与实际经营能力不匹配，出现异常峰值。\n2、具体诱因：\n①客户前期未扫码销售卷烟集中在单日销售，导致销量突增。\n②系统库存远高于实际库存，客户通过销售调整库存偏差。\n③为提升销购比，虚增销量。\n④宴席、商务等真实合规场景，导致当日销量突增。", "solution": "1、核心引导：引导客户养成真实扫码的规范经营行为，从源头规避销量异常。\n2、规范动作：\n①引导客户真实扫码、实卖实销、严禁前期不扫码、后期集中补单；\n②严禁客户为提升销购比、调整库存，虚增扫码销量；\n③通过流水数据分析、客户沟通等方式核实订单真实性。如客户存在不规范行为，客户经理须及时引导。如遇大笔订单，可拆单分天销售。\n3、若客户经常出现明显销售波动情况或动销较差，可认定为不具备代表性，建议进行退出或替换处理，待日后销售具备代表性时再申请进入。", "operation": "1、销量异常偏大处理方法：\n①如果当日销售真实，先退货，再分天分单销售。\n②如果当日销售不真实，采取“退货”处理。\n注：如果该客户同样存在库存偏差情况，请按照库存调整方法进一步处理。\n2、样本户替换流程：\n①样本户已注销或即将注销或其他紧急事项：分公司向营销中心提交退出申请后，在国家局信息系统进行样本户退出。待新替换样本户数据确认上传国家局无误后再进行新增样本户处理。\n②样本户正常退出、替换：分公司向营销中心提交替换申请后，次日与海晟融创确认新样本户数据已上传国家局无误后方可进行替换处理。"}, {"id": 8, "cat": "异常扫码行为", "indicator": "负销售", "detail_labels": ["当日总零售销量<0", "单日单规格零售销量<0"], "analysis": "1、本质原因：盘盈（退货、入库）＞当日销量，导致当日总销量＜0.\n2、具体诱因：\n①操作非当日订单退货，且退货量＞销量。\n②为调整库存偏差，客户通过盘库增加库存，且增加量＞销量；\n③客户将乱渠道卷烟进行入库操作造成。（入库卷烟量＞当日总销量）", "solution": "1、核心引导：引导客户养成真实扫码、规范退货的经营行为，从源头规避负销售异常；\n2、规范动作：\n①指导客户“退货”尽量做到当日订单当日退，非当日订单须咨询客户经理后再操作。\n②引导客户真实扫码，每日盘库。\n③严禁客户扫码销售乱渠道卷烟。", "operation": "1、当日总零售销量＜0处理方法：\n①补销量＞偏差值（偏差值=退货量-当日销量）\n\n2、退货单处理方法：\n①当日订单当日退：按系统正常退货流程操作。\n②非当日订单退货：先核验当日销量是否大于退货量，且单规格销量大于单规格退货量，如果都满足，正常退货。否则向营销中心报备后再制定处理方案。\n3、样本户替换流程：\n①样本户已注销或即将注销或其他紧急事项：向营销中心提交退出申请后，在国家局信息系统进行样本户退出。待新替换样本户数据确认上传国家局无误后再进行新增样本户处理。\n②样本户正常退出、替换：向营销中心提交替换申请后，次日与海晟融创确认新样本户数据已上传国家局无误后方可进行替换处理。"}, {"id": 10, "cat": "异常扫码行为", "indicator": "刷扫异常", "detail_labels": ["集中扫码、笔数较少、日销售波动较大"], "analysis": "1、本质原因：客户扫码销售行为与实际经营行为不匹配，存在虚假扫码、集中刷扫的嫌疑。\n2、具体诱因：\n①客户未养成每卖必扫的行为，当日销售集中在某时间段刷扫，导致销售波动异常；\n②客户为实现销购比达标，虚假刷扫、虚增销售笔数。", "solution": "1、核心引导：引导客户养成真实扫码的规范经营行为，从源头规避刷扫异常。\n2、规范动作：\n①引导客户“实卖实销、一笔一单”，严禁集中扫码，如客户整改不到位应劝退新零售业务，并及时进行样本户的退出、替换处理。\n②如果客户在正常经营情况下，笔数较少问题短期内无法改善，可认定为不具备代表性，建议进行样本户替换处理，待日后销售具备代表性时再申请进入。", "operation": "1、刷扫异常系统处理方法：\n①“笔数太少”处理方法：适当增加笔数，仅限当日处理。\n②“集中扫码”处理方法：先“退货”，再分时段销售，\n根据实际情况灵活制定方案，如有必要报备营销中心再处理。\n2、样本户替换流程：\n①样本户正常退出、替换：向营销中心提交替换申请后，次日与海晟融创确认新样本户数据已上传国家局无误后方可进行替换处理。"}, {"id": 11, "cat": "异常销购比", "indicator": "销购比不达标", "detail_labels": ["销购比明显过高或过低（销购比前140天正常区间0.8-1.2）"], "analysis": "1、本质原因：客户扫码销量与进货量严重不匹配，销购比偏离合理经营区间。\n2、具体诱因：\n①未养成每卖必扫的习惯，存在少扫、漏扫，导致销购比过低。\n②实际动销偏弱，销购比偏低。\n③将乱渠道卷烟入库扫码销售，导致销购比过高。\n④因节假日放假或不可控事由导致暂时闭店引发销购比偏低。\n⑤140天内对库存进行过大规模调整的新进样本户，导致销购比明显异常。\n⑥货源策略突然收紧或宽松，导致销购比异常。\n⑦每天盯着销购比随意调整销售节奏，导致销购比异常。", "solution": "1、核心引导：引导客户养成真实扫码的规范经营行为，忘记销购比的存在。\n2、规范动作：\n①正面引导客户养成真实扫码、实卖实销、日常库存盘点的规范行为。\n②指导客户开展促销下柜，降低库存。如短期内无法提升的，可认定为不具备代表性样本户，建议立即进行样本户替换处理。\n③严禁客户将乱渠道卷烟入库扫码销售。\n④如客户有事闭店超过三天的，可以向客户经理报备，国家局系统进行临时退出处理（新规范下不允许，待系统验证）。如客户长期暂停营业，可提前报备客户经理，营销中心及时进行样本户替换处理。\n⑤在大规模调整库存的140天内不要申请成为样本户。\n⑥策略更宽松，就开展促销提升销量；策略收紧，可应急补货。情况较特殊，须根据实际情况再制定针对性策略。\n⑦如客户有意愿配合，正面引导客户养成真实扫码、实卖实销、日常库存盘点的规范行为。同时，如库存偏差较大，可申请退出样本户后再校准库存。如客户无意愿，尽快进行样本户替换处理。", "operation": "1、销购比不达标系统处理方法：\n①销购比过低样本户：先样本户退出，再通过交易流水、实地盘库方式确认样本户是否真实扫码。若样本户存在不规范扫码行为，应引导客户正确、规范使用新零售设备；若样本户为真实扫码，可引导客户促销下柜以提升销购比。如下柜效果不明显，只能视为不具备代表性，及时退出或替换。        \n②销购比过高样本户：先退出样本户处理， 通过询问客户、查看客户修改库存记录、手工入库记录、实地盘库等方式确认客户是否存在非渠道卷烟进行扫码销售，并短期内进行整改；若样本户确为真实扫码，引导客户可适当加大卷烟订购量，若客户不同意，只能视为不具有代表性及时进行替换。\n2、样本户替换流程：\n①样本户正常退出、替换：向营销中心提交替换申请后，次日与海晟融创确认新样本户数据已上传国家局无误后方可进行替换处理。\n3、建议：为降低异常销购比剔除通报，建议挑选销购比值在0.85至1.15范围内的后备样本户成为样本户。"}, {"id": 12, "cat": "扫码天数", "indicator": "扫码天数不达标", "detail_labels": ["1.月度扫码天数不达标（1-2月扫码天数≥20天；其他月≥27天；）"], "analysis": "1、本质原因：客户经营现状相较多数客户偏弱，不具备代表性。\n2、具体诱因：\n①客户有事闭店。\n②客户长期暂停营业或注销。\n③客户E福通使用意愿不强，存在卷烟未扫码销售的行为。\n④退货量或入库量＞销量，导致当日销量≤0.", "solution": "1、核心引导：引导客户养成真实扫码、实卖实销的规范经营行为，从源头规避扫码天数不达标异常。\n2、规范动作：\n①客户有事闭店超过三天的，可以向客户经理报备，国家局系统进行临时退出处理（新规范下不允许，待系统验证）。如客户长期暂停营业，可提前报备客户经理，营销中心及时进行样本户替换处理。\n②如客户使用意愿不强，尽快进行样本户替换。", "operation": "1、扫码天数不达标系统处理方法：\n①如能在当日发现，应及时做好客户补刷提醒，避免客户漏刷情况发生。\n2、样本户替换流程：\n1、样本户已注销或即将注销或其他紧急事项：向营销中心提交退出申请后，在国家局信息系统进行样本户退出。待新替换样本户数据确认上传国家局无误后再进行新增样本户处理。\n2、样本户正常退出、替换：向营销中心提交替换申请后，次日与海晟融创确认新样本户数据已上传国家局无误后方可进行替换处理。"}, {"id": 13, "cat": "损益量", "indicator": "损益量较大", "detail_labels": ["当日损益量>库存量*0.02(损益量包括：报损量、手动入库量、出差单出库、修改库存（“库存改大”为益，“库存改小”为损））"], "analysis": "1、本质原因：系统库存与实际库存出现严重偏差，损益量绝对值超出合理经营范围，\n2、具体诱因：\n①客户未养成每卖必扫的行为，存在少扫、漏扫，通过报损、直接修改库或出库存出库操作。\n②客户将非渠道卷烟入库并扫码销售。", "solution": "1、核心引导：引导客户养成真实扫码、实卖实销，每日库存盘点的规范经营行为，确保系统库存与实际库存完全匹配，从源头规避库存损益量异常。\n2、规范动作：\n①引导客户做到真实扫码、实卖实销，严禁少扫 / 漏扫、错扫，确保每一笔扫码销售都与实际交易完全一致，避免库存偏差累积。\n②严禁客户入库非渠道卷烟及扫码销售。", "operation": "1、损益量较大系统处理方法：\n仅一个方法：对冲。越早处理，影响越小。可向营销中心报备后再处理。"}, {"id": 14, "cat": "其他", "indicator": "修改库存", "detail_labels": ["存在手工直接修改库存行为"], "analysis": "1、本质原因：客户未按规范流程调整库存。\n2、具体诱因：\n①客户未养成每卖必扫的习惯，存在少扫、漏扫，为调整库存偏差，修改库存。\n②客户扫码销售乱渠道卷烟，为调整库存偏差，修改库存。\n③通过改库存、虚增流水实现销购比达标。\n④因改价格误操作修改库存。", "solution": "1、核心引导：引导客户养成真实扫码、实卖实销、每日库存盘点的规范经营行为，严禁私自修改库存；\n2、规范动作：\n①引导客户每日闭店前核对库存，出现偏差优先通过销售/红冲操作调整，严禁直接修改库存；\n②正面引导客户禁止将乱渠道卷烟入库销售。\n③严禁客户为实现销购比带包、调整库存，虚增扫码销量；\n④做好客户修改价格的培训工作。", "operation": "1、库存偏差系统处理方法：\n①库存偏差较小的，核验该规格实际库存数量后，应通过“销售”、“红冲”等规范操作对库存数量偏差进行调整。\n②库存偏差数量较大的，核验该规格实际库存数量后，向市局营销中心报备后通过直接修改库存的操作对库存数量偏差进行调整。（此类客户近期不宜选为样本户）"}, {"id": 15, "cat": "其他", "indicator": "改价率", "detail_labels": ["条销售改价率低于80%的样本户。（改价率=整条零售价与建议零售价不同的笔数/整条零售总笔数*100%。）"], "analysis": "1、本质原因：客户未按实际成交价格修改系统零售价，导致改价笔数占比不达标。\n2、具体诱因\n①客户配合意愿低，未按照要求校准价格。\n②成交价格真实，属极小的个体。", "solution": "1、核心引导：引导客户养成真实扫码、实卖实销、按实际成交价格改价的规范经营行为，从源头规避改价率异常；\n2、规范动作：\n①引导客户将所有上架卷烟全调整为真实销售的价格。\n②客户真实改价率较低，可判定为不具备代表性，建议进行替换。", "operation": "1、系统改价率偏低系统处理方法：\n①如成交价非真实成交价，在当日发现，可先做退货处理，修改价格后再重新交易。\n2、样本户替换流程：\n①样本户正常退出、替换：向营销中心提交替换申请后，次日与海晟融创确认新样本户数据已上传国家局无误后方可进行替换处理。"}, {"id": 16, "cat": "其他", "indicator": "价格剔除", "detail_labels": ["建议零售价阈值，50%-300%"], "analysis": "1、本质原因：客户扫码销售的订单价格与建议零售价偏差过大，导致数据被剔除。\n2、具体诱因：\n①客户改价操作失误，未按实际成交价格修改零售价，导致价格超出阈值；（即使事后采取退货补救，数据也会上传国家局）\n②客户使用线上线下组合支付方式，系统仅统计线上支付金额，导致价格统计异常，超出阈值；", "solution": "1、核心引导：引导客户养成真实扫码、按实际成交价格改价的规范经营行为，从源头规避价格剔除异常；\n2、规范动作：\n①引导客户熟练掌握系统改价操作，并将所有上架卷烟调整为实际销售价格，避免改价操作失误。\n②优先使用 E 福通完成全金额交易，避免线上线下组合支付方式，防止价格统计异常；", "operation": "①暂未发现有效补救措施（退货行不通）。将所有上架卷烟全调整为真实销售的价格。"}];
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function highlightText(text, kw) {
+  if (!kw) return escHtml(text);
+  try {
+    const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return escHtml(text).replace(new RegExp(escaped, 'gi'), m => '<mark>' + m + '</mark>');
+  } catch(e) { return escHtml(text); }
+}
+function splitToSteps(text) {
+  const lines = text.trim().split('\n');
+  const steps = [];
+  let cur = '';
+  for (const line of lines) {
+    const t = line.trim();
+    if (!t) continue;
+    if (/^(\d+[、.．]|[①②③④⑤⑥⑦⑧⑨]|注[：:]|\d+[）\)])/.test(t)) {
+      if (cur) steps.push(cur);
+      cur = t;
+    } else {
+      cur += (cur ? '\n' + t : t);
+    }
+  }
+  if (cur) steps.push(cur);
+  return steps;
+}
+function renderContent(text, kw) {
+  const steps = splitToSteps(text);
+  if (!steps || steps.length <= 1) {
+    return '<div class="content-text">' + highlightText(text, kw) + '</div>';
+  }
+  let h = '<ul class="step-list">';
+  steps.forEach((s, i) => {
+    h += '<li class="step-item"><span class="step-dot">' + (i+1) + '</span><span class="step-text">' + highlightText(s, kw) + '</span></li>';
+  });
+  h += '</ul>';
+  return h;
+}
+
+function filterData() {
+  let d = DATA;
+  if (currentCat !== '全部') d = d.filter(x => x.cat === currentCat);
+  if (currentKw) {
+    const kw = currentKw.toLowerCase();
+    d = d.filter(x =>
+      x.indicator.toLowerCase().includes(kw) ||
+      x.detail_labels.some(l => l.toLowerCase().includes(kw)) ||
+      x.analysis.toLowerCase().includes(kw) ||
+      x.solution.toLowerCase().includes(kw) ||
+      x.operation.toLowerCase().includes(kw) ||
+      x.cat.toLowerCase().includes(kw) ||
+      String(x.id).includes(kw)
+    );
+  }
+  return d;
+}
+
+function doRender() {
+  const d = filterData();
+  const cats = [...new Set(d.map(x => x.cat))];
+  document.querySelectorAll('.cat-section').forEach(sec => {
+    const cat = sec.dataset.cat;
+    if (cats.includes(cat)) {
+      sec.style.display = '';
+      const container = sec.querySelector('.cat-items');
+      if (container) {
+        container.querySelectorAll('.item-card').forEach(card => {
+          const id = parseInt(card.dataset.id);
+          card.style.display = d.some(x => x.id === id) ? '' : 'none';
+        });
+      }
+    } else {
+      sec.style.display = 'none';
+    }
+  });
+
+  d.forEach(item => {
+    ['analysis','solution','operation'].forEach((key, ti) => {
+      const pane = document.getElementById('tp-' + item.id + '-' + ti);
+      if (pane && !pane.dataset.rendered) {
+        pane.innerHTML = renderContent(item[key], currentKw);
+        pane.dataset.rendered = '1';
+      }
+    });
+  });
+
+  const empty = document.getElementById('emptyState');
+  if (d.length === 0 && currentKw) {
+    empty.classList.add('show');
+  } else {
+    empty.classList.remove('show');
+  }
+
+  document.getElementById('totalBadge').textContent = currentKw ? '找到' + d.length + '条' : '共' + DATA.length + '条';
+
+  const tip = document.getElementById('searchTip');
+  if (currentKw) {
+    tip.style.display = 'block';
+    tip.textContent = '搜索"' + currentKw + '"，找到 ' + d.length + ' 条结果';
+  } else {
+    tip.style.display = 'none';
+  }
+}
+
+let currentCat = '全部';
+let currentKw = '';
+const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
+searchInput.addEventListener('input', function() {
+  currentKw = this.value.trim();
+  searchClear.style.display = currentKw ? 'flex' : 'none';
+  document.querySelectorAll('.tab-pane').forEach(p => delete p.dataset.rendered);
+  doRender();
+});
+searchClear.addEventListener('click', function() {
+  searchInput.value = '';
+  currentKw = '';
+  this.style.display = 'none';
+  document.querySelectorAll('.tab-pane').forEach(p => delete p.dataset.rendered);
+  doRender();
+  searchInput.focus();
+});
+
+document.getElementById('catChips').addEventListener('click', function(e) {
+  const chip = e.target.closest('.cat-chip');
+  if (!chip) return;
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  currentCat = chip.dataset.cat;
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  const tb = document.querySelector('.tab-item[data-tab="' + currentCat + '"]');
+  if (tb) tb.classList.add('active');
+  document.querySelectorAll('.tab-pane').forEach(p => delete p.dataset.rendered);
+  doRender();
+  window.scrollTo({ top:0, behavior:'smooth' });
+});
+
+function toggleCat(header) {
+  const items = header.nextElementSibling;
+  items.classList.toggle('collapsed');
+  header.classList.toggle('collapsed');
+}
+
+const openCards = new Set();
+function toggleCard(id, headEl) {
+  const body = document.getElementById('body-' + id);
+  if (!headEl) headEl = body ? body.previousElementSibling : null;
+  if (!body) return;
+  if (openCards.has(id)) {
+    openCards.delete(id);
+    body.classList.remove('open');
+    if (headEl) headEl.classList.remove('open');
+  } else {
+    openCards.add(id);
+    body.classList.add('open');
+    if (headEl) headEl.classList.add('open');
+    const item = DATA.find(x => x.id === id);
+    if (item) {
+      ['analysis','solution','operation'].forEach((key, ti) => {
+        const pane = document.getElementById('tp-' + id + '-' + ti);
+        if (pane && !pane.dataset.rendered) {
+          pane.innerHTML = renderContent(item[key], currentKw);
+          pane.dataset.rendered = '1';
+        }
+      });
+    }
+    setTimeout(() => headEl && headEl.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
+  }
+}
+
+function switchItemTab(id, tabIdx, btn, evt) {
+  if (evt) evt.stopPropagation();
+  const card = btn.closest('.item-card');
+  if (!card) return;
+  card.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  card.querySelectorAll('.tab-pane').forEach((p, i) => p.classList.toggle('active', i === tabIdx));
+}
+
+function switchTab(cat, evt) {
+  if (evt) evt.stopPropagation();
+  currentCat = cat;
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  const tb = document.querySelector('.tab-item[data-tab="' + cat + '"]');
+  if (tb) tb.classList.add('active');
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+  const chip = document.querySelector('.cat-chip[data-cat="' + cat + '"]');
+  if (chip) chip.classList.add('active');
+  document.querySelectorAll('.tab-pane').forEach(p => delete p.dataset.rendered);
+  doRender();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+const backTop = document.getElementById('backTop');
+window.addEventListener('scroll', function() {
+  backTop.classList.toggle('show', window.scrollY > 300);
+}, { passive: true });
+
+doRender();
+
+</script>
+</body>
+</html>
